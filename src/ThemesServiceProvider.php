@@ -9,6 +9,7 @@ use TCG\Voyager\Models\Role;
 use TCG\Voyager\Models\MenuItem;
 use Illuminate\Events\Dispatcher;
 use TCG\Voyager\Models\Permission;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Schema;
@@ -88,7 +89,11 @@ class ThemesServiceProvider extends ServiceProvider
             // Make sure we have an active theme
             if (isset($theme)) {
                 $this->loadViewsFrom($this->themes_folder.'/'.@$theme->folder, 'theme');
+
+                // Load anonymous components inside the theme
+                Blade::anonymousComponentPath( $this->themes_folder.'/'.@$theme->folder.'/components' );
             }
+
             $this->loadViewsFrom($this->themes_folder, 'themes_folder');
 
         } catch(\Exception $e){
